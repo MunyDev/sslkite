@@ -33,6 +33,11 @@ format_part_number() {
 	echo "$2"
 }
 
+verified() {
+	rm /tmp/.developer_mode 2> /dev/null
+	crossystem disable_dev_request=1 || fail "Failed to set disable_dev_request."
+}
+
 mount /dev/disk/by-label/STATE /mnt/stateful_partition/
 cros_dev="$(get_largest_cros_blockdev)"
 if [ -z "$cros_dev" ]; then
@@ -45,8 +50,12 @@ mount "$stateful" /tmp || fail "Failed to mount stateful."
 mkdir -p /tmp/unencrypted
 cp /mnt/stateful_partition/usr/share/packeddata/. /tmp/unencrypted/ -rvf
 chown 1000 /tmp/unencrypted/PKIMetadata -R
-rm /tmp/.developer_mode
+echo "Return to verified (If this is your first run, press y)? (y/n)"
+read -p -n1 "> " dev
+case $dev in  
+  y|Y) verified ;; 
+  *) verified ;; 
+esac
 umount /tmp
-crossystem disable_dev_request=1 || fail "Failed to set disable_dev_request."
 read -p "Finished! Press enter to reboot."
 reboot
