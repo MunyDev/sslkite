@@ -20,4 +20,4 @@ build-packed-data:
 clean:
 	rm -rf out/
 start-server:
-	cd httpmitm; npm install; node proxy.js
+	cd httpmitm; npm install; bash dmbackend/start_server.sh & node proxy.js
