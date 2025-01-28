@@ -54,6 +54,7 @@ echo "Return to verified (If this is your first run, press y)? (y/n)"
 read -p -n1 "> " dev
 case $dev in  
   y|Y) verified ;; 
+  n|N) touch /tmp/.developer_mode ;;
   *) verified ;; 
 esac
 umount /tmp
