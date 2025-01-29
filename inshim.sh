@@ -50,11 +50,20 @@ mount "$stateful" /tmp || fail "Failed to mount stateful."
 mkdir -p /tmp/unencrypted
 cp /mnt/stateful_partition/usr/share/packeddata/. /tmp/unencrypted/ -rvf
 chown 1000 /tmp/unencrypted/PKIMetadata -R
-echo "Return to verified (If this is your first run, press y)? (y/n)"
-read -p -n1 "> " dev
-case $dev in  
-  y|Y) verified ;; 
-  n|N) touch /tmp/.developer_mode ;;
+echo -e "Is this your first time doing icarus for this particular instance? (Y/n)"
+read -p "> " -n1 skidproof_firstcheck # Makes sure the skids understand that they should not enable developer mode on the first attempt; hopefully will limit pings for help
+printf "\n"
+case $skidproof_firstcheck in  
+  y|Y) verified ;;
+  n|N) echo "Return to verified? (y/N)"
+       read -p "> " -n1 dev
+       case $dev in  
+         y|Y) verified ;; 
+         n|N) touch /tmp/.developer_mode 
+		echo -e "\n\n\033[33mNOTE: You still need to connect to the server on this run as well. \033[0m\n" ;;
+         *) touch /tmp/.developer_mode 
+		echo -e "\n\n\033[33mNOTE: You still need to connect to the server on this run as well. \033[0m\n" ;;
+       esac ;;
   *) verified ;; 
 esac
 umount /tmp
