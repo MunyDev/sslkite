@@ -51,7 +51,7 @@ mkdir -p /tmp/unencrypted
 cp /mnt/stateful_partition/usr/share/packeddata/. /tmp/unencrypted/ -rvf
 chown 1000 /tmp/unencrypted/PKIMetadata -R
 echo "Return to verified (If this is your first run, press y)? (y/n)"
-read -p -n1 "> " dev
+read -p "> " -n1 dev
 case $dev in  
   y|Y) verified ;; 
   n|N) touch /tmp/.developer_mode ;;
